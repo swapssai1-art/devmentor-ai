@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { generate } from "../api/generate";
 import Loader from "../components/Loader";
 import ResultCard from "../components/ResultCard";
+import { ProjectContext } from "../context/ProjectContext";
 
 export default function IdeaGenerator() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setProject } = useContext(ProjectContext);
 
   async function handleGenerate() {
     setLoading(true);
@@ -14,6 +16,7 @@ export default function IdeaGenerator() {
     try {
       const response = await generate("idea", { idea: input });
       setResult(response);
+      setProject({ name: input, description: response });
     } catch (error) {
       setResult("Error generating response");
     }
